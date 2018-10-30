@@ -1,6 +1,12 @@
-# Activerecord::PostgresEnum
+[![Gem Version](https://badge.fury.io/rb/activerecord-postgres_enum.svg)](https://badge.fury.io/rb/activerecord-postgres_enum)
+[![Build Status](https://travis-ci.org/bibendi/activerecord-postgres_enum.svg?branch=master)](https://travis-ci.org/bibendi/activerecord-postgres_enum)
+
+# ActiveRecord::PostgresEnum
 
 Adds migration and schema.rb support to PostgreSQL enum data types.
+
+<a href="https://evilmartians.com/?utm_source=activerecord-postgres_enum">
+<img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54"></a>
 
 ## Installation
 
