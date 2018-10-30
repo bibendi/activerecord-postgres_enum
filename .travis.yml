@@ -1,0 +1,15 @@
+sudo: require
+
+services:
+  - docker
+
+install:
+  - gem install dip
+
+before_script:
+  - unset BUNDLE_GEMFILE
+  - dip provision
+
+script:
+  - dip rspec
+  - dip rubocop

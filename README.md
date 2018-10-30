@@ -1,0 +1,65 @@
+# Activerecord::PostgresEnum
+
+Adds migration and schema.rb support to PostgreSQL enum data types.
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'activerecord-postgres_enum'
+```
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install activerecord-postgres_enum
+
+## Usage
+
+### Migrations
+
+```ruby
+create_enum :mood, %w(happy great been_better)
+
+create_table :person do
+  t.enum :person_mood, enum_name: :mood
+end
+```
+
+Running the above will create a table :person, with a column :person_mood of type :mood. This will also be saved on schema.rb so that `rake schema:load` works as expected.
+
+To drop an existing enum:
+
+```ruby
+drop_enum :mood
+```
+
+To add a value into existing enum:
+
+```ruby
+alter_enum :mood, "crazy"
+```
+
+Renaming / updating enums is currently not supported, since it's quite tricky.
+
+## Development
+
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/bibendi/activerecord-postgres_enum. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+## Code of Conduct
+
+Everyone interacting in the Activerecord::PostgresEnum project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/bibendi/activerecord-postgres_enum/blob/master/CODE_OF_CONDUCT.md).
