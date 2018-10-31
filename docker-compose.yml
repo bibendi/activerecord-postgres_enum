@@ -6,6 +6,9 @@ services:
     environment:
       - BUNDLE_PATH=/bundle
       - BUNDLE_CONFIG=/app/.bundle/config
+      - DB_HOST=db
+      - DB_NAME=docker
+      - DB_USERNAME=postgres
     command: bash
     working_dir: /app
     volumes:
@@ -13,6 +16,13 @@ services:
       - bundler_data:/bundle
     tmpfs:
       - /tmp
+    depends_on:
+      - db
+
+  db:
+    image: postgres:10
+    environment:
+      - POSTGRES_DB=docker
 
 volumes:
   bundler_data:
