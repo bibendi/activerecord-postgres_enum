@@ -10,27 +10,37 @@ compose:
 interaction:
   bash:
     service: app
+    compose_run_options: [no-deps]
+
+  app:
+    service: app
+    subcommands:
+      console:
+        command: ./bin/console
+      clean:
+        command: rm -rf Gemfile.lock gemfiles/*.gemfile.*
+
 
   bundle:
     service: app
     command: bundle
+    compose_run_options: [no-deps]
 
-  console:
+  appraisal:
     service: app
-    command: ./bin/console
+    command: bundle exec appraisal
+    compose_run_options: [no-deps]
 
   rspec:
     service: app
-    command: bundle exec rspec
+    command: bundle exec appraisal bundle exec rspec
 
   rubocop:
     service: app
     command: bundle exec rubocop
-
-  clean:
-    service: app
-    command: rm -rf Gemfile.lock
+    compose_run_options: [no-deps]
 
 provision:
-  - dip clean
+  - dip app clean
   - dip bundle install
+  - dip appraisal install

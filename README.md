@@ -44,13 +44,23 @@ To drop an existing enum:
 drop_enum :mood
 ```
 
+To rename an existing enum:
+
+```ruby
+rename_enum :mood, :emotions
+```
+
 To add a value into existing enum:
 
 ```ruby
-alter_enum :mood, "crazy"
+add_enum_value :mood, "crazy"
 ```
 
-Renaming / updating enums is currently not supported, since it's quite tricky.
+To rename a value:
+
+```ruby
+rename_enum_value :mood, "crazy", "nutty"
+```
 
 ## Development
 

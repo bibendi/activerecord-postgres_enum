@@ -2,6 +2,7 @@
 AllCops:
   Exclude:
     - tmp/**/*
+    - gemfiles/*
   TargetRubyVersion: 2.5
 
 Documentation:
