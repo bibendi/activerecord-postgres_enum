@@ -14,7 +14,7 @@ module ActiveRecord
 
       def enums
         select_all(DEFINED_ENUMS_QUERY).each_with_object({}) do |row, memo|
-          memo[row["typname"].to_sym] = row['enumlabels'].gsub(/[{}]/, '').split(',')
+          memo[row["typname"].to_sym] = row['enumlabels'].gsub(/[{}]/, '').split(',').sort
         end
       end
 
