@@ -6,7 +6,7 @@ module ActiveRecord
       DEFINED_ENUMS_QUERY = <<~SQL
         SELECT t.OID, t.typname, t.typtype, array_agg(e.enumlabel) as enumlabels
         FROM pg_type t
-        INNER JOIN pg_enum e ON e.enumtypid = t.oid
+        LEFT JOIN pg_enum e ON e.enumtypid = t.oid
         WHERE typtype = 'e'
         GROUP BY t.OID, t.typname, t.typtype
         ORDER BY t.typname
@@ -14,7 +14,7 @@ module ActiveRecord
 
       def enums
         select_all(DEFINED_ENUMS_QUERY).each_with_object({}) do |row, memo|
-          memo[row["typname"].to_sym] = row['enumlabels'].gsub(/[{}]/, '').split(',').sort
+          memo[row["typname"].to_sym] = row['enumlabels'].gsub(/[{}]/, '').gsub('NULL', '').split(',').sort
         end
       end
 
