@@ -9,6 +9,7 @@ require "active_support/lazy_load_hooks"
 require "active_record/postgres_enum/version"
 require "active_record/postgres_enum/postgresql_adapter"
 require "active_record/postgres_enum/schema_dumper"
+require "active_record/postgres_enum/enum_validator"
 
 ActiveSupport.on_load(:active_record) do
   require "active_record/postgres_enum/extensions"
