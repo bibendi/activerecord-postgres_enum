@@ -36,6 +36,8 @@ module ActiveRecord
       end
 
       def rename_enum_value(name, existing_value, new_value)
+        raise "Renaming enum values is only supported in PostgreSQL 10.0+" unless rename_enum_value_supported?
+
         execute "ALTER TYPE #{name} RENAME VALUE '#{existing_value}' TO '#{new_value}'"
       end
 
@@ -47,6 +49,10 @@ module ActiveRecord
         spec = super(column, types)
         spec[:enum_name] = column.cast_type.enum_name.inspect if column.type == :enum
         spec
+      end
+
+      def rename_enum_value_supported?
+        ActiveRecord::Base.connection.send(:postgresql_version) >= 100_000
       end
     end
   end
