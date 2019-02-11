@@ -15,7 +15,20 @@ ActiveSupport.on_load(:active_record) do
   require "active_record/postgres_enum/extensions"
 
   ActiveRecord::SchemaDumper.prepend ActiveRecord::PostgresEnum::SchemaDumper
+
   ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend ActiveRecord::PostgresEnum::PostgreSQLAdapter
+
+  if defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::ColumnDumper)
+    ActiveRecord::ConnectionAdapters::PostgreSQL::ColumnDumper.prepend(
+      ActiveRecord::PostgresEnum::PostgreSQLAdapter::ColumnDumperExt
+    )
+  end
+
+  if defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::SchemaDumper)
+    ActiveRecord::ConnectionAdapters::PostgreSQL::SchemaDumper.prepend(
+      ActiveRecord::PostgresEnum::PostgreSQLAdapter::SchemaDumperExt
+    )
+  end
 
   ::ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::NATIVE_DATABASE_TYPES[:enum] = {
     name: 'enum'
