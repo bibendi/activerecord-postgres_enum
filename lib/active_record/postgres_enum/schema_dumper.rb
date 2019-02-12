@@ -17,7 +17,7 @@ module ActiveRecord
 
         @connection.enums.each do |name, values|
           values = values.map(&:inspect).join(', ')
-          statements << "  create_enum('#{name}', [#{values}])"
+          statements << "  create_enum #{name.inspect}, [#{values}]"
         end
 
         stream.puts statements.join("\n")
