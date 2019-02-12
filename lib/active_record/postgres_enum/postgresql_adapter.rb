@@ -3,6 +3,26 @@
 module ActiveRecord
   module PostgresEnum
     module PostgreSQLAdapter
+      # For Rails >= 5.2
+      # https://github.com/rails/rails/blob/5-2-stable/activerecord/lib/active_record/connection_adapters/postgresql/schema_dumper.rb
+      module SchemaDumperExt
+        def prepare_column_options(column)
+          spec = super
+          spec[:enum_name] = column.sql_type.inspect if column.type == :enum
+          spec
+        end
+      end
+
+      # For Rails <5.2
+      # https://github.com/rails/rails/blob/5-1-stable/activerecord/lib/active_record/connection_adapters/postgresql/schema_dumper.rb
+      module ColumnDumperExt
+        def prepare_column_options(column)
+          spec = super
+          spec[:enum_name] = column.sql_type.inspect if column.type == :enum
+          spec
+        end
+      end
+
       DEFINED_ENUMS_QUERY = <<~SQL
         SELECT t.OID, t.typname, t.typtype, array_agg(e.enumlabel) as enumlabels
         FROM pg_type t
