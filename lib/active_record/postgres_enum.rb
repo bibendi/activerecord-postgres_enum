@@ -9,6 +9,7 @@ require "active_support/lazy_load_hooks"
 require "active_record/postgres_enum/version"
 require "active_record/postgres_enum/postgresql_adapter"
 require "active_record/postgres_enum/schema_dumper"
+require "active_record/postgres_enum/command_recorder"
 require "active_record/postgres_enum/enum_validator"
 
 ActiveSupport.on_load(:active_record) do
@@ -33,4 +34,6 @@ ActiveSupport.on_load(:active_record) do
   ::ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::NATIVE_DATABASE_TYPES[:enum] = {
     name: 'enum'
   }
+
+  ActiveRecord::Migration::CommandRecorder.prepend ActiveRecord::PostgresEnum::CommandRecorder
 end

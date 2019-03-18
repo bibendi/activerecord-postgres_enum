@@ -8,8 +8,11 @@ require "combustion"
 Combustion.initialize! :active_record
 
 require "rspec/rails"
+require "support/migrations_helper"
 
 RSpec.configure do |config|
+  config.include MigrationsHelper
+
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
 
