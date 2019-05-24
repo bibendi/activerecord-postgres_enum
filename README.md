@@ -53,13 +53,13 @@ rename_enum :mood, :emotions
 To add a value into existing enum:
 
 ```ruby
-add_enum_value :mood, "crazy"
+add_enum_value :mood, "pensive"
 ```
 
 To rename a value:
 
 ```ruby
-rename_enum_value :mood, "crazy", "nutty"
+rename_enum_value :mood, "pensive", "wistful"
 ```
 
 ## Development
