@@ -24,7 +24,11 @@ module ActiveRecord
       end
 
       DEFINED_ENUMS_QUERY = <<~SQL
-        SELECT t.OID, t.typname, t.typtype, array_agg(e.enumlabel) as enumlabels
+        SELECT
+          t.OID,
+          t.typname,
+          t.typtype,
+          array_to_string(array_agg(e.enumlabel ORDER BY e.enumsortorder), '\t\t', '') as enumlabels
         FROM pg_type t
         LEFT JOIN pg_enum e ON e.enumtypid = t.oid
         WHERE typtype = 'e'
@@ -34,12 +38,12 @@ module ActiveRecord
 
       def enums
         select_all(DEFINED_ENUMS_QUERY).each_with_object({}) do |row, memo|
-          memo[row["typname"].to_sym] = row['enumlabels'].gsub(/[{}]/, '').gsub('NULL', '').split(',').sort
+          memo[row["typname"].to_sym] = row['enumlabels'].split("\t\t")
         end
       end
 
       def create_enum(name, values)
-        values = values.map { |v| "'#{v}'" }
+        values = values.map { |v| quote v }
         execute "CREATE TYPE #{name} AS ENUM (#{values.join(', ')})"
       end
 
@@ -51,14 +55,20 @@ module ActiveRecord
         execute "ALTER TYPE #{name} RENAME TO #{new_name}"
       end
 
-      def add_enum_value(name, value)
-        execute "ALTER TYPE #{name} ADD VALUE '#{value}'"
+      def add_enum_value(name, value, after: nil, before: nil)
+        sql = "ALTER TYPE #{name} ADD VALUE #{quote value}"
+        if after
+          sql += " AFTER #{quote after}"
+        elsif before
+          sql += " BEFORE #{quote before}"
+        end
+        execute sql
       end
 
       def rename_enum_value(name, existing_value, new_value)
         raise "Renaming enum values is only supported in PostgreSQL 10.0+" unless rename_enum_value_supported?
 
-        execute "ALTER TYPE #{name} RENAME VALUE '#{existing_value}' TO '#{new_value}'"
+        execute "ALTER TYPE #{name} RENAME VALUE #{quote existing_value} TO #{quote new_value}"
       end
 
       def migration_keys

@@ -35,6 +35,36 @@ RSpec.describe ActiveRecord::PostgresEnum do
       expect(connection.enums[:foo]).to eq %w(a1 a2 a3)
     end
 
+    it "adds an enum value after a given value" do
+      expect { connection.add_enum_value(:foo, "a3", after: "a1") }.to_not raise_error
+      expect(connection.enums[:foo]).to eq %w(a1 a3 a2)
+    end
+
+    it "adds an enum value before a given value" do
+      expect { connection.add_enum_value(:foo, "a3", before: "a1") }.to_not raise_error
+      expect(connection.enums[:foo]).to eq %w(a3 a1 a2)
+    end
+
+    it "adds an enum value with a space" do
+      expect { connection.add_enum_value(:foo, "a 3") }.to_not raise_error
+      expect(connection.enums[:foo]).to eq ["a1", "a2", "a 3"]
+    end
+
+    it "adds an enum value with a comma" do
+      expect { connection.add_enum_value(:foo, "a,3") }.to_not raise_error
+      expect(connection.enums[:foo]).to eq ["a1", "a2", "a,3"]
+    end
+
+    it "adds an enum value with a single quote" do
+      expect { connection.add_enum_value(:foo, "a'3") }.to_not raise_error
+      expect(connection.enums[:foo]).to eq ["a1", "a2", "a'3"]
+    end
+
+    it "adds an enum value with a double quote" do
+      expect { connection.add_enum_value(:foo, 'a"3') }.to_not raise_error
+      expect(connection.enums[:foo]).to eq ["a1", "a2", 'a"3']
+    end
+
     it "renames an enum value" do
       expect { connection.rename_enum_value(:foo, "a2", "b2") }.to_not raise_error
       expect(connection.enums[:foo]).to eq %w(a1 b2)

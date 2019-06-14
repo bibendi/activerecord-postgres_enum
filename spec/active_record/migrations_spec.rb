@@ -10,7 +10,7 @@ RSpec.describe ActiveRecord::PostgresEnum::CommandRecorder do
 
     migration.migrate(:up)
 
-    expect(connection.enums[:genre]).to eq %w[comedy drama]
+    expect(connection.enums[:genre]).to eq %w[drama comedy]
 
     migration.migrate(:down)
 
@@ -25,12 +25,12 @@ RSpec.describe ActiveRecord::PostgresEnum::CommandRecorder do
     migration.migrate(:up)
 
     expect(connection.enums[:genre]).to be_nil
-    expect(connection.enums[:style]).to eq %w[comedy drama]
+    expect(connection.enums[:style]).to eq %w[drama comedy]
 
     migration.migrate(:down)
 
     expect(connection.enums[:style]).to be_nil
-    expect(connection.enums[:genre]).to eq %w[comedy drama]
+    expect(connection.enums[:genre]).to eq %w[drama comedy]
   end
 
   it "reverts rename_enum_value" do
@@ -40,10 +40,10 @@ RSpec.describe ActiveRecord::PostgresEnum::CommandRecorder do
 
     migration.migrate(:up)
 
-    expect(connection.enums[:genre]).to eq %w[comedy thriller]
+    expect(connection.enums[:genre]).to eq %w[thriller comedy]
 
     migration.migrate(:down)
 
-    expect(connection.enums[:genre]).to eq %w[comedy drama]
+    expect(connection.enums[:genre]).to eq %w[drama comedy]
   end
 end
