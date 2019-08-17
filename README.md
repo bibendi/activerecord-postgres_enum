@@ -56,6 +56,8 @@ To add a value into existing enum:
 add_enum_value :mood, "pensive"
 ```
 
+**NB:** To stop Postgres complaining about adding enum values inside a transaction, use [`disable_ddl_transaction!`](https://api.rubyonrails.org/classes/ActiveRecord/Migration.html#method-c-disable_ddl_transaction-21) in your migration.        
+
 To rename a value:
 
 ```ruby
