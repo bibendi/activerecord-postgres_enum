@@ -9,7 +9,7 @@ module ActiveRecord
 
           def initialize(options = {})
             @enum_name = options.delete(:enum_name).to_sym
-            super
+            super(**options)
           end
         end
 
