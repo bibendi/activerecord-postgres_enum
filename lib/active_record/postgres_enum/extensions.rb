@@ -7,9 +7,9 @@ module ActiveRecord
         class Enum < Type::Value # :nodoc:
           attr_reader :enum_name
 
-          def initialize(options = {})
-            @enum_name = options.delete(:enum_name).to_sym
-            super
+          def initialize(enum_name:, **kwargs)
+            @enum_name = enum_name.to_sym
+            super(**kwargs)
           end
         end
 
