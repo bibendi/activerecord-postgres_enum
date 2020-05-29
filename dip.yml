@@ -1,7 +1,4 @@
-version: '2'
-
-environment:
-  BUNDLE_GEMFILE: /app/Gemfile
+version: '4'
 
 compose:
   files:
@@ -9,38 +6,36 @@ compose:
 
 interaction:
   bash:
-    service: app
-    compose_run_options: [no-deps]
+    description: Open the Bash shell in app's container
+    service: ruby
+    command: /bin/bash
 
-  app:
-    service: app
-    subcommands:
-      console:
-        command: ./bin/console
-      clean:
-        command: rm -rf Gemfile.lock gemfiles/*.gemfile.*
-
+  pry:
+    description: Open Pry console
+    service: ruby
+    command: ./bin/console
 
   bundle:
-    service: app
+    description: Run Bundler commands
+    service: ruby
     command: bundle
-    compose_run_options: [no-deps]
 
   appraisal:
-    service: app
+    service: ruby
     command: bundle exec appraisal
     compose_run_options: [no-deps]
 
   rspec:
-    service: app
-    command: bundle exec appraisal bundle exec rspec
+    description: Run Rspec commands
+    service: ruby
+    command: bundle exec rspec
 
   rubocop:
-    service: app
+    description: Run Rubocop commands
+    service: ruby
     command: bundle exec rubocop
-    compose_run_options: [no-deps]
 
 provision:
-  - dip app clean
+  - rm -f Gemfile.lock gemfiles/*
   - dip bundle install
   - dip appraisal install

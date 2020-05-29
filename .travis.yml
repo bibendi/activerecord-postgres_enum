@@ -1,5 +1,9 @@
 sudo: require
 
+env:
+  - RUBY_IMAGE=2.6
+  - RUBY_IMAGE=2.7
+
 services:
   - docker
 
@@ -11,5 +15,5 @@ before_script:
   - dip provision
 
 script:
-  - dip rspec
   - dip rubocop
+  - dip appraisal rspec

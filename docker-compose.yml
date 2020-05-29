@@ -1,14 +1,13 @@
-version: '3.4'
+version: '2.4'
 
 services:
-  app:
-    image: ruby:2.5.1
+  ruby:
+    image: ruby:${RUBY_IMAGE:-2.6}
     environment:
+      - HISTFILE=/app/tmp/.bash_history
       - BUNDLE_PATH=/bundle
       - BUNDLE_CONFIG=/app/.bundle/config
-      - DB_HOST=db
-      - DB_NAME=docker
-      - DB_USERNAME=postgres
+      - DATABASE_URL=postgres://postgres:@postgres:5432
     command: bash
     working_dir: /app
     volumes:
@@ -17,12 +16,18 @@ services:
     tmpfs:
       - /tmp
     depends_on:
-      - db
+      postgres:
+        condition: service_healthy
 
-  db:
-    image: postgres:10
+  postgres:
+    image: postgres:12
     environment:
-      - POSTGRES_DB=docker
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+      interval: 10s
 
 volumes:
   bundler_data:
