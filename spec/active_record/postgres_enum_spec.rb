@@ -69,5 +69,10 @@ RSpec.describe ActiveRecord::PostgresEnum do
       expect { connection.rename_enum_value(:foo, "a2", "b2") }.to_not raise_error
       expect(connection.enums[:foo]).to eq %w(a1 b2)
     end
+
+    it "adds an enum value to an existing table" do
+      expect { connection.add_column(:tracks, :foo, :foo) }.to_not raise_error
+      expect(connection.enums[:foo]).to eq %w(a1 a2)
+    end
   end
 end

@@ -46,4 +46,18 @@ RSpec.describe ActiveRecord::PostgresEnum::CommandRecorder do
 
     expect(connection.enums[:genre]).to eq %w[drama comedy]
   end
+
+  it "reverts add_column" do
+    build_migration { create_enum :genre, %w[drama comedy] }.migrate(:up)
+
+    migration = build_migration { add_column :tracks, :genre, :genre }
+
+    migration.migrate(:up)
+
+    expect(connection.enums[:genre]).to eq %w[drama comedy]
+
+    migration.migrate(:down)
+
+    expect(connection.enums[:genre]).to be_nil
+  end
 end
