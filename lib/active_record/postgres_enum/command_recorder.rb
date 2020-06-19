@@ -26,11 +26,6 @@ module ActiveRecord
       def invert_rename_enum_value(args)
         [:rename_enum_value, [args.first] + args.last(2).reverse]
       end
-
-      def invert_add_column(args, &block)
-        [:drop_enum, args]
-        [:remove_column, args, block]
-      end
     end
   end
 end

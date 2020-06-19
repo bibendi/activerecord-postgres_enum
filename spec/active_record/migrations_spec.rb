@@ -54,10 +54,13 @@ RSpec.describe ActiveRecord::PostgresEnum::CommandRecorder do
 
     migration.migrate(:up)
 
-    expect(connection.enums[:genre]).to eq %w[drama comedy]
+    col = connection.columns(:tracks).find { |c| c.name == "genre" }
+    expect(col).not_to be nil
+    expect(col.sql_type).to eq "genre"
 
     migration.migrate(:down)
 
-    expect(connection.enums[:genre]).to be_nil
+    col = connection.columns(:tracks).find { |c| c.name == "genre" }
+    expect(col).to be nil
   end
 end
