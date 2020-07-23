@@ -56,6 +56,12 @@ To add a value into existing enum:
 add_enum_value :mood, "pensive"
 ```
 
+To remove a value from existing enum:
+
+```ruby
+remove_enum_value :mood, "pensive"
+```
+
 To add a new enum column to an existing table:
 
 ```ruby
