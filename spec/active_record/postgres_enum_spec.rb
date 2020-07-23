@@ -73,25 +73,25 @@ RSpec.describe ActiveRecord::PostgresEnum do
     it "removes an enum value with a space" do
       expect { connection.add_enum_value(:foo, "a 3") }.to_not raise_error
       expect { connection.remove_enum_value(:foo, "a 3") }.to_not raise_error
-      expect(connection.enums[:foo]).to eq ["a1", "a2"]
+      expect(connection.enums[:foo]).to eq %w(a1 a2)
     end
 
     it "removes an enum value with a comma" do
       expect { connection.add_enum_value(:foo, "a,3") }.to_not raise_error
       expect { connection.remove_enum_value(:foo, "a,3") }.to_not raise_error
-      expect(connection.enums[:foo]).to eq ["a1", "a2"]
+      expect(connection.enums[:foo]).to eq %w(a1 a2)
     end
 
     it "removes an enum value with a single quote" do
       expect { connection.add_enum_value(:foo, "a'3") }.to_not raise_error
       expect { connection.remove_enum_value(:foo, "a'3") }.to_not raise_error
-      expect(connection.enums[:foo]).to eq ["a1", "a2"]
+      expect(connection.enums[:foo]).to eq %w(a1 a2)
     end
 
     it "removes an enum value with a double quote" do
       expect { connection.add_enum_value(:foo, "a\"3") }.to_not raise_error
       expect { connection.remove_enum_value(:foo, "a\"3") }.to_not raise_error
-      expect(connection.enums[:foo]).to eq ["a1", "a2"]
+      expect(connection.enums[:foo]).to eq %w(a1 a2)
     end
 
     it "renames an enum value" do

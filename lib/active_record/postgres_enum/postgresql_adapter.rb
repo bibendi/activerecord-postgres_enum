@@ -64,9 +64,13 @@ module ActiveRecord
         end
         execute sql
       end
-      
+
       def remove_enum_value(name, value)
-        sql = "DELETE FROM pg_enum WHERE enumlabel=#{quote value} AND enumtypid=(SELECT oid FROM pg_type WHERE typname='#{name}')"
+        sql = %{
+          DELETE FROM pg_enum
+          WHERE enumlabel=#{quote value}
+          AND enumtypid=(SELECT oid FROM pg_type WHERE typname='#{name}')
+        }
         execute sql
       end
 
