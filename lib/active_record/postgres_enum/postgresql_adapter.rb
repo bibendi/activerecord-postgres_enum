@@ -64,6 +64,11 @@ module ActiveRecord
         end
         execute sql
       end
+      
+      def remove_enum_value(name, value)
+        sql = "DELETE FROM pg_enum WHERE enumlabel=#{quote value} AND enumtypid=(SELECT oid FROM pg_type WHERE typname='#{name}')"
+        execute sql
+      end
 
       def rename_enum_value(name, existing_value, new_value)
         raise "Renaming enum values is only supported in PostgreSQL 10.0+" unless rename_enum_value_supported?
