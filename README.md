@@ -58,6 +58,8 @@ add_enum_value :mood, "pensive"
 
 To remove a value from existing enum:
 
+> :warning: Make sure that value is not used anywhere in the database.
+
 ```ruby
 remove_enum_value :mood, "pensive"
 ```
