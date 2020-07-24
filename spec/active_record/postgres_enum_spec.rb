@@ -35,6 +35,15 @@ RSpec.describe ActiveRecord::PostgresEnum do
       expect(connection.enums[:foo]).to eq %w(a1 a2 a3)
     end
 
+    it "adds an enum value if not exists" do
+      expect { connection.add_enum_value(:foo, "a1", if_not_exists: true) }.to_not raise_error
+    end
+
+    it "fails to add an enum value if exists" do
+      expect { connection.add_enum_value(:foo, "a1", if_not_exists: false) }.to raise_error
+      expect { connection.add_enum_value(:foo, "a2") }.to raise_error
+    end
+
     it "adds an enum value after a given value" do
       expect { connection.add_enum_value(:foo, "a3", after: "a1") }.to_not raise_error
       expect(connection.enums[:foo]).to eq %w(a1 a3 a2)
