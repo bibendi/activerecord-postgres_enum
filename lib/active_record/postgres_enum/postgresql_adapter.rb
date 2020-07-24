@@ -55,8 +55,10 @@ module ActiveRecord
         execute "ALTER TYPE #{name} RENAME TO #{new_name}"
       end
 
-      def add_enum_value(name, value, after: nil, before: nil)
-        sql = "ALTER TYPE #{name} ADD VALUE #{quote value}"
+      def add_enum_value(name, value, after: nil, before: nil, if_not_exists: nil)
+        if_not_exists_statement = 'IF NOT EXISTS' if if_not_exists
+
+        sql = "ALTER TYPE #{name} ADD VALUE #{if_not_exists_statement} #{quote value}"
         if after
           sql += " AFTER #{quote after}"
         elsif before
