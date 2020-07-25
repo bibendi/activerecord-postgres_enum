@@ -42,13 +42,19 @@ module ActiveRecord
         end
       end
 
-      def create_enum(name, values)
+      def create_enum(name, values, if_not_exists: nil)
+        return if if_not_exists && enums.include?(name.to_sym)
+
         values = values.map { |v| quote v }
         execute "CREATE TYPE #{name} AS ENUM (#{values.join(', ')})"
       end
 
-      def drop_enum(name)
-        execute "DROP TYPE #{name}"
+      def drop_enum(name, cascade: nil, if_exists: nil)
+        if_exists_statement = 'IF EXISTS' if if_exists
+        cascade_statement = 'CASCADE' if cascade
+
+        sql = "DROP TYPE #{if_exists_statement} #{name} #{cascade_statement}"
+        execute sql
       end
 
       def rename_enum(name, new_name)
