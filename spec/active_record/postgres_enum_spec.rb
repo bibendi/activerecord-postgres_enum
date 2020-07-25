@@ -20,9 +20,25 @@ RSpec.describe ActiveRecord::PostgresEnum do
       expect(connection.enums[:foo]).to eq %w(a1 a2)
     end
 
+    it "creates an enum if not exists" do
+      expect { connection.create_enum(:foo, %w(a1 a2), if_not_exists: true) }.not_to raise_error
+    end
+
+    it "fails create an existing enum" do
+      expect { connection.create_enum(:foo, %w(a1 a2)) }.to raise_error
+    end
+
     it "drops an enum" do
       expect { connection.drop_enum(:foo) }.to_not raise_error
       expect(connection.enums[:foo]).to be_nil
+    end
+
+    it "drops an enum if exists" do
+      expect { connection.drop_enum(:some_unknown_type, if_exists: true) }.to_not raise_error
+    end
+
+    it "fails drop a non existing enum" do
+      expect { connection.drop_enum(:some_unknown_type) }.to raise_error
     end
 
     it "renames an enum" do
