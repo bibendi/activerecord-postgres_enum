@@ -49,9 +49,11 @@ module ActiveRecord
         execute "CREATE TYPE #{name} AS ENUM (#{values.join(', ')})"
       end
 
-      def drop_enum(name, if_exists: nil)
+      def drop_enum(name, cascade: nil, if_exists: nil)
         if_exists_statement = 'IF EXISTS' if if_exists
-        sql = "DROP TYPE #{if_exists_statement} #{name}"
+        cascade_statement = 'CASCADE' if cascade
+
+        sql = "DROP TYPE #{if_exists_statement} #{name} #{cascade_statement}"
         execute sql
       end
 

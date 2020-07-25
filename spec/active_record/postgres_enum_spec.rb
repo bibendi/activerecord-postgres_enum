@@ -25,7 +25,7 @@ RSpec.describe ActiveRecord::PostgresEnum do
     end
 
     it "fails create an existing enum" do
-      expect { connection.create_enum(:foo, %w(a1 a2)) }.to raise_error
+      expect { connection.create_enum(:foo, %w(a1 a2)) }.to raise_error StandardError
     end
 
     it "drops an enum" do
@@ -38,7 +38,24 @@ RSpec.describe ActiveRecord::PostgresEnum do
     end
 
     it "fails drop a non existing enum" do
-      expect { connection.drop_enum(:some_unknown_type) }.to raise_error
+      expect { connection.drop_enum(:some_unknown_type) }.to raise_error StandardError
+    end
+
+    context 'drops an enum with cascade' do
+      before do
+        connection.create_table :test_tbl_for_cascade do |t|
+          t.enum :baz, enum_name: :foo
+        end
+      end
+
+      it "fails drop an enum with cascade" do
+        expect { connection.drop_enum(:foo) }.to raise_error StandardError
+      end
+
+      it "drops an enum with cascade" do
+        expect { connection.drop_enum(:foo, cascade: true) }.to_not raise_error
+        expect(connection.columns('test_tbl_for_cascade').map(&:name)).to_not include('baz')
+      end
     end
 
     it "renames an enum" do
@@ -56,8 +73,8 @@ RSpec.describe ActiveRecord::PostgresEnum do
     end
 
     it "fails to add an enum value if exists" do
-      expect { connection.add_enum_value(:foo, "a1", if_not_exists: false) }.to raise_error
-      expect { connection.add_enum_value(:foo, "a2") }.to raise_error
+      expect { connection.add_enum_value(:foo, "a1", if_not_exists: false) }.to raise_error StandardError
+      expect { connection.add_enum_value(:foo, "a2") }.to raise_error StandardError
     end
 
     it "adds an enum value after a given value" do
