@@ -20,7 +20,7 @@ module ActiveRecord
           statements << "  create_enum #{name.inspect}, [\n#{values}\n  ], force: :cascade"
         end
 
-        stream.puts statements.join("\n")
+        stream.puts statements.join("\n\n")
         stream.puts
       end
     end
