@@ -42,8 +42,10 @@ module ActiveRecord
         end
       end
 
-      def create_enum(name, values, if_not_exists: nil)
+      def create_enum(name, values, force: false, if_not_exists: nil)
         return if if_not_exists && enums.include?(name.to_sym)
+
+        drop_enum(name, cascade: force == :cascade, if_exists: true) if force
 
         values = values.map { |v| quote v }
         execute "CREATE TYPE #{name} AS ENUM (#{values.join(', ')})"

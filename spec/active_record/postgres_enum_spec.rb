@@ -24,8 +24,43 @@ RSpec.describe ActiveRecord::PostgresEnum do
       expect { connection.create_enum(:foo, %w(a1 a2), if_not_exists: true) }.not_to raise_error
     end
 
+    it "does not change the enum options if it exists" do
+      expect { connection.create_enum(:foo, %w(b1 b2), if_not_exists: true) }.not_to raise_error
+      expect(connection.enums[:foo]).to eq %w(a1 a2)
+    end
+
     it "fails create an existing enum" do
       expect { connection.create_enum(:foo, %w(a1 a2)) }.to raise_error StandardError
+    end
+
+    context "it forces the creation of an enum" do
+      it "recreates an enum with current set of values" do
+        expect(connection.enums[:foo]).to eq %w(a1 a2)
+        expect { connection.create_enum(:foo, %w(b1 b2), force: :cascade) }.not_to raise_error
+        expect(connection.enums[:foo]).to eq %w(b1 b2)
+      end
+
+      it "does not error out if forcing creation of an enum" do
+        expect(connection.enums[:bar]).to be_nil
+        expect { connection.create_enum(:bar, %w(a1 a2), force: :cascade) }.not_to raise_error
+        expect(connection.enums[:bar]).to eq %w(a1 a2)
+      end
+
+      context "cascading" do
+        before do
+          connection.create_table :test_tbl_for_cascade do |t|
+            t.enum :baz, enum_name: :foo
+          end
+        end
+
+        it "fails to force create an enum if not cascading" do
+          expect { connection.create_enum(:foo, %w(a1 a2), force: true) }.to raise_error StandardError
+        end
+
+        it "force creates an enum if cascading" do
+          expect { connection.create_enum(:foo, %w(a1 a2), force: :cascade) }.not_to raise_error
+        end
+      end
     end
 
     it "drops an enum" do
