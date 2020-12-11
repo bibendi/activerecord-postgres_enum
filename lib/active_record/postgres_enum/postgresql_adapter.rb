@@ -38,7 +38,7 @@ module ActiveRecord
 
       def enums
         select_all(DEFINED_ENUMS_QUERY).each_with_object({}) do |row, memo|
-          memo[row["typname"].to_sym] = row['enumlabels'].split("\t\t")
+          memo[row["typname"].to_sym] = row["enumlabels"].split("\t\t")
         end
       end
 
@@ -48,12 +48,12 @@ module ActiveRecord
         drop_enum(name, cascade: force == :cascade, if_exists: true) if force
 
         values = values.map { |v| quote v }
-        execute "CREATE TYPE #{name} AS ENUM (#{values.join(', ')})"
+        execute "CREATE TYPE #{name} AS ENUM (#{values.join(", ")})"
       end
 
       def drop_enum(name, cascade: nil, if_exists: nil)
-        if_exists_statement = 'IF EXISTS' if if_exists
-        cascade_statement = 'CASCADE' if cascade
+        if_exists_statement = "IF EXISTS" if if_exists
+        cascade_statement = "CASCADE" if cascade
 
         sql = "DROP TYPE #{if_exists_statement} #{name} #{cascade_statement}"
         execute sql
@@ -64,7 +64,7 @@ module ActiveRecord
       end
 
       def add_enum_value(name, value, after: nil, before: nil, if_not_exists: nil)
-        if_not_exists_statement = 'IF NOT EXISTS' if if_not_exists
+        if_not_exists_statement = "IF NOT EXISTS" if if_not_exists
 
         sql = "ALTER TYPE #{name} ADD VALUE #{if_not_exists_statement} #{quote value}"
         if after

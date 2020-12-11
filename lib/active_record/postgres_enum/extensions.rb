@@ -16,7 +16,7 @@ module ActiveRecord
         class TypeMapInitializer
           # We need to know the column name, and the default implementation discards it
           def register_enum_type(row)
-            register row['oid'], OID::Enum.new(enum_name: row['typname'])
+            register row["oid"], OID::Enum.new(enum_name: row["typname"])
           end
         end
       end

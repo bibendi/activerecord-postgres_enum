@@ -20,7 +20,7 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:12
+    image: postgres:13
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
