@@ -1,48 +1,19 @@
----
+require:
+  - standard/cop/semantic_blocks
+
+inherit_gem:
+  standard: config/base.yml
+
 AllCops:
   Exclude:
-    - tmp/**/*
-    - gemfiles/*
-  TargetRubyVersion: 2.5
+    - 'bin/*'
+    - 'exe/*'
+    - 'tmp/**/*'
+    - 'Gemfile'
+    - 'gemfiles/**/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+  DisplayCopNames: true
 
-Documentation:
+Standard/SemanticBlocks:
   Enabled: false
-
-Metrics/BlockLength:
-  Exclude:
-    - simple_contracts.gemspec
-    - Gemfile
-    - spec/**/*
-
-Metrics/MethodLength:
-  Max: 14
-
-Metrics/LineLength:
-  Max: 120
-
-Metrics/ClassLength:
-  Max: 300
-
-Metrics/ParameterLists:
-  CountKeywordArgs: false
-
-Style/FormatString:
-  Enabled: false
-
-Style/PercentLiteralDelimiters:
-  Enabled: false
-
-Security/MarshalLoad:
-  Enabled: false
-
-Style/DoubleNegation:
-  Enabled: false
-
-Style/StringLiterals:
-  Enabled: false
-
-Layout/DotPosition:
-  EnforcedStyle: trailing
-
-Layout/SpaceInsideHashLiteralBraces:
-  EnforcedStyle: no_space

@@ -32,7 +32,7 @@ ActiveSupport.on_load(:active_record) do
   end
 
   ::ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::NATIVE_DATABASE_TYPES[:enum] = {
-    name: 'enum'
+    name: "enum"
   }
 
   ActiveRecord::Migration::CommandRecorder.prepend ActiveRecord::PostgresEnum::CommandRecorder
