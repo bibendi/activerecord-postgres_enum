@@ -1,5 +1,5 @@
 [![Gem Version](https://badge.fury.io/rb/activerecord-postgres_enum.svg)](https://badge.fury.io/rb/activerecord-postgres_enum)
-[![Build Status](https://travis-ci.org/bibendi/activerecord-postgres_enum.svg?branch=master)](https://travis-ci.org/bibendi/activerecord-postgres_enum)
+[![Build Status](https://github.com/bibendi/activerecord-postgres_enum/.github/workflows/ruby.yml/badge.svg?branch=master)](https://github.com/bibendi/activerecord-postgres_enum/actions?query=workflow%3ACI+branch%3Amaster)
 
 # ActiveRecord::PostgresEnum
 
