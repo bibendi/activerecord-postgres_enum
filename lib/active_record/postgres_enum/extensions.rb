@@ -24,7 +24,7 @@ module ActiveRecord
       module ColumnMethods # :nodoc:
         # Enables `t.enum :my_field, enum_name: :my_enum_name` on migrations
         def enum(name, options = {})
-          column(name, options.delete(:enum_name), options.except(:enum_name))
+          column(name, options.delete(:enum_name), index: options.delete(:index), **options.except(:enum_name))
         end
       end
     end
