@@ -176,6 +176,19 @@ RSpec.describe ActiveRecord::PostgresEnum do
       expect(connection.enums[:foo]).to eq %w[a1 b2]
     end
 
+    it "creates table with enum column" do
+      expect do
+        connection.create_table :albums do |t|
+          t.enum :bar, enum_name: :foo
+        end
+      end.to_not raise_error
+
+      col = connection.columns(:albums).find { |c| c.name == "bar" }
+      expect(col).not_to be nil
+      expect(col.type).to eq :enum
+      expect(col.sql_type).to eq "foo"
+    end
+
     it "adds an enum value to an existing table" do
       expect { connection.add_column(:tracks, :bar, :foo) }.to_not raise_error
 
