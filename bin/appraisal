@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Remove this wrapper after the fix will be merged
+# https://github.com/thoughtbot/appraisal/issues/186
+
+require 'rubygems'
+require 'bundler/setup'
+require 'set'
+require 'appraisal'
+require 'appraisal/cli'
+
+begin
+  Appraisal::CLI.start
+rescue Appraisal::AppraisalsNotFound => e
+  puts e.message
+  exit 127
+end
