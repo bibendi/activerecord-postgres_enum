@@ -14,14 +14,15 @@ module ActiveRecord
 
       def dump_enums(stream)
         statements = []
+        if @connection.respond_to?(:enums)
+          @connection.enums.each do |name, values|
+            values = values.map { |v| "    #{v.inspect}," }.join("\n")
+            statements << "  create_enum #{name.inspect}, [\n#{values}\n  ], force: :cascade"
+          end
 
-        @connection.enums.each do |name, values|
-          values = values.map { |v| "    #{v.inspect}," }.join("\n")
-          statements << "  create_enum #{name.inspect}, [\n#{values}\n  ], force: :cascade"
+          stream.puts statements.join("\n\n")
+          stream.puts
         end
-
-        stream.puts statements.join("\n\n")
-        stream.puts
       end
     end
   end
