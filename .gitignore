@@ -10,3 +10,4 @@
 .pry_history
 .rspec_status
 Gemfile.lock
+lefthook-local.yml

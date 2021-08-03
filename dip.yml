@@ -36,6 +36,7 @@ interaction:
     command: bundle exec standardrb
 
 provision:
+  - cp -f lefthook-local.dip_example.yml lefthook-local.yml
   - dip compose down --volumes
   - rm -f Gemfile.lock gemfiles/*
   - dip bundle install
