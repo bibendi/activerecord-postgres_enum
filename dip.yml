@@ -1,4 +1,4 @@
-version: '4'
+version: '7'
 
 compose:
   files:
@@ -21,21 +21,22 @@ interaction:
     command: bundle
 
   appraisal:
+    description: Run Appraisal commands
     service: ruby
-    command: bundle exec appraisal
-    compose_run_options: [no-deps]
+    command: bundle exec ./bin/appraisal
 
   rspec:
     description: Run Rspec commands
     service: ruby
     command: bundle exec rspec
 
-  rubocop:
-    description: Run Rubocop commands
+  standardrb:
+    description: Run Standard linter
     service: ruby
-    command: bundle exec rubocop
+    command: bundle exec standardrb
 
 provision:
+  - dip compose down --volumes
   - rm -f Gemfile.lock gemfiles/*
   - dip bundle install
   - dip appraisal install

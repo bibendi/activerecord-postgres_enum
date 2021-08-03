@@ -1,8 +1,6 @@
-version: '2.4'
-
 services:
   ruby:
-    image: ruby:${RUBY_IMAGE:-2.6}
+    image: ruby:${RUBY_IMAGE:-3.0}-buster
     environment:
       - HISTFILE=/app/tmp/.bash_history
       - BUNDLE_PATH=/bundle
