@@ -3,26 +3,6 @@
 module ActiveRecord
   module PostgresEnum
     module PostgreSQLAdapter
-      # For Rails >= 5.2
-      # https://github.com/rails/rails/blob/5-2-stable/activerecord/lib/active_record/connection_adapters/postgresql/schema_dumper.rb
-      module SchemaDumperExt
-        def prepare_column_options(column)
-          spec = super
-          spec[:enum_name] = column.sql_type.inspect if column.type == :enum
-          spec
-        end
-      end
-
-      # For Rails <5.2
-      # https://github.com/rails/rails/blob/5-1-stable/activerecord/lib/active_record/connection_adapters/postgresql/schema_dumper.rb
-      module ColumnDumperExt
-        def prepare_column_options(column)
-          spec = super
-          spec[:enum_name] = column.sql_type.inspect if column.type == :enum
-          spec
-        end
-      end
-
       DEFINED_ENUMS_QUERY = <<~SQL
         SELECT
           t.OID,
@@ -36,14 +16,14 @@ module ActiveRecord
         ORDER BY t.typname
       SQL
 
-      def enums
+      def enum_types
         select_all(DEFINED_ENUMS_QUERY).each_with_object({}) do |row, memo|
           memo[row["typname"].to_sym] = row["enumlabels"].split("\t\t")
         end
       end
 
       def create_enum(name, values, force: false, if_not_exists: nil)
-        return if if_not_exists && enums.include?(name.to_sym)
+        return if if_not_exists && enum_types.include?(name.to_sym)
 
         drop_enum(name, cascade: force == :cascade, if_exists: true) if force
 
@@ -88,16 +68,6 @@ module ActiveRecord
         raise "Renaming enum values is only supported in PostgreSQL 10.0+" unless rename_enum_value_supported?
 
         execute "ALTER TYPE #{name} RENAME VALUE #{quote existing_value} TO #{quote new_value}"
-      end
-
-      def migration_keys
-        super + [:enum_name]
-      end
-
-      def prepare_column_options(column, types)
-        spec = super(column, types)
-        spec[:enum_name] = column.cast_type.enum_name.inspect if column.type == :enum
-        spec
       end
 
       def rename_enum_value_supported?

@@ -10,11 +10,11 @@ RSpec.describe ActiveRecord::PostgresEnum::CommandRecorder do
 
     migration.migrate(:up)
 
-    expect(connection.enums[:genre]).to eq %w[drama comedy]
+    expect(connection.enum_types[:genre]).to eq %w[drama comedy]
 
     migration.migrate(:down)
 
-    expect(connection.enums[:genre]).to be_nil
+    expect(connection.enum_types[:genre]).to be_nil
   end
 
   it "reverts rename_enum" do
@@ -24,13 +24,13 @@ RSpec.describe ActiveRecord::PostgresEnum::CommandRecorder do
 
     migration.migrate(:up)
 
-    expect(connection.enums[:genre]).to be_nil
-    expect(connection.enums[:style]).to eq %w[drama comedy]
+    expect(connection.enum_types[:genre]).to be_nil
+    expect(connection.enum_types[:style]).to eq %w[drama comedy]
 
     migration.migrate(:down)
 
-    expect(connection.enums[:style]).to be_nil
-    expect(connection.enums[:genre]).to eq %w[drama comedy]
+    expect(connection.enum_types[:style]).to be_nil
+    expect(connection.enum_types[:genre]).to eq %w[drama comedy]
   end
 
   it "reverts rename_enum_value" do
@@ -40,11 +40,11 @@ RSpec.describe ActiveRecord::PostgresEnum::CommandRecorder do
 
     migration.migrate(:up)
 
-    expect(connection.enums[:genre]).to eq %w[thriller comedy]
+    expect(connection.enum_types[:genre]).to eq %w[thriller comedy]
 
     migration.migrate(:down)
 
-    expect(connection.enums[:genre]).to eq %w[drama comedy]
+    expect(connection.enum_types[:genre]).to eq %w[drama comedy]
   end
 
   it "reverts add_column" do
