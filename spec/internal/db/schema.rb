@@ -4,6 +4,6 @@ ActiveRecord::Schema.define do
   create_enum("moods", %w[happy great been_better])
 
   create_table :tracks do |t|
-    t.enum "mood", enum_name: :moods
+    t.enum "mood", enum_type: :moods
   end
 end

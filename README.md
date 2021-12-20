@@ -32,7 +32,7 @@ Or install it yourself as:
 create_enum :mood, %w(happy great been_better)
 
 create_table :person do
-  t.enum :person_mood, enum_name: :mood
+  t.enum :person_mood, enum_type: :mood
 end
 ```
 

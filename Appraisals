@@ -2,7 +2,7 @@
 
 if RUBY_VERSION < "3"
   appraise "rails-5" do
-    gem "rails", "~> 5.0"
+    gem "rails", "~> 5.2"
   end
 end
 
@@ -12,6 +12,6 @@ end
 
 if RUBY_VERSION >= "2.7"
   appraise "rails-7" do
-    gem "rails", "~> 7.0.0.rc1"
+    gem "rails", "~> 7.0"
   end
 end

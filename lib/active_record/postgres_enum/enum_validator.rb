@@ -7,7 +7,7 @@ module ActiveRecord
         @enums ||= {}
         return @enums[attr_id] if @enums.key?(attr_id)
 
-        @enums[attr_id] ||= connection.enums.fetch(type.to_sym) do
+        @enums[attr_id] ||= connection.enum_types.fetch(type.to_sym) do
           raise "Enum `#{type}` not found in a database #{connection}"
         end
       end
