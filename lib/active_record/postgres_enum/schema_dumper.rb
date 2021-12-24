@@ -4,10 +4,12 @@ module ActiveRecord
   module PostgresEnum
     # provide support for writing out the 'create_enum' calls in schema.rb
     module SchemaDumper
-      def tables(stream)
-        types(stream)
+      unless ActiveRecord::PostgresEnum.rails_7?
+        def tables(stream)
+          types(stream)
 
-        super
+          super
+        end
       end
 
       private
@@ -25,10 +27,12 @@ module ActiveRecord
         end
       end
 
-      def prepare_column_options(column)
-        spec = super
-        spec[:enum_type] ||= "\"#{column.sql_type}\"" if column.enum?
-        spec
+      unless ActiveRecord::PostgresEnum.rails_7?
+        def prepare_column_options(column)
+          spec = super
+          spec[:enum_type] ||= "\"#{column.sql_type}\"" if column.enum?
+          spec
+        end
       end
     end
   end

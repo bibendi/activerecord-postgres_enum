@@ -6,6 +6,18 @@ require "active_record/connection_adapters/postgresql/schema_statements"
 require "active_record/connection_adapters/postgresql_adapter"
 require "active_support/lazy_load_hooks"
 
+module ActiveRecord
+  module PostgresEnum
+    def self.rails_7?
+      ActiveRecord::VERSION::MAJOR == 7
+    end
+
+    def self.rails_5?
+      ActiveRecord::VERSION::MAJOR == 5
+    end
+  end
+end
+
 require "active_record/postgres_enum/version"
 require "active_record/postgres_enum/postgresql_adapter"
 require "active_record/postgres_enum/schema_dumper"
@@ -15,29 +27,17 @@ require "active_record/postgres_enum/column_methods"
 require "active_record/postgres_enum/command_recorder"
 require "active_record/postgres_enum/enum_validator"
 
-module ActiveRecord
-  module PostgresEnum
-    def self.rails_7?
-      Rails::VERSION::MAJOR == 7
-    end
-
-    def self.rails_5?
-      Rails::VERSION::MAJOR == 5
-    end
-  end
-end
-
 ActiveSupport.on_load(:active_record) do
   ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend ActiveRecord::PostgresEnum::PostgreSQLAdapter
+
+  ActiveRecord::ConnectionAdapters::PostgreSQL::SchemaDumper.prepend(
+    ActiveRecord::PostgresEnum::SchemaDumper
+  )
 
   ActiveRecord::Migration::CommandRecorder.prepend ActiveRecord::PostgresEnum::CommandRecorder
 
   unless ActiveRecord::PostgresEnum.rails_7?
     ::ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::NATIVE_DATABASE_TYPES[:enum] = {}
-
-    ActiveRecord::ConnectionAdapters::PostgreSQL::SchemaDumper.prepend(
-      ActiveRecord::PostgresEnum::SchemaDumper
-    )
 
     if ActiveRecord::PostgresEnum.rails_5?
       ActiveRecord::ConnectionAdapters::PostgreSQLColumn.prepend(
