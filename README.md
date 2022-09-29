@@ -36,7 +36,7 @@ create_table :person do
 end
 ```
 
-Running the above will create a table :person, with a column :person_mood of type :mood. This will also be saved on schema.rb so that `rake schema:load` works as expected.
+Running the above will create a table :person, with a column :person_mood of type :mood. This will also be saved on schema.rb so that `rake db:schema:load` works as expected.
 
 To drop an existing enum:
 
