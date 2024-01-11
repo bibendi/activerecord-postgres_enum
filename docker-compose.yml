@@ -1,6 +1,6 @@
 services:
   ruby:
-    image: ruby:${RUBY_IMAGE:-2.7}-buster
+    image: ruby:${RUBY_IMAGE:-2.7}
     environment:
       - HISTFILE=/app/tmp/.bash_history
       - BUNDLE_PATH=/bundle
