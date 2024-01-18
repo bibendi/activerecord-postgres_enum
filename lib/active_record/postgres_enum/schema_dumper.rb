@@ -22,8 +22,12 @@ module ActiveRecord
             statements << "  create_enum #{name.inspect}, [\n#{values}\n  ], force: :cascade"
           end
 
-          stream.puts statements.join("\n\n")
-          stream.puts
+          # Check if there any enum types to dump - otherwise don't output
+          # anything to prevent empty lines in schema.rb
+          if statements.any?
+            stream.puts statements.join("\n\n")
+            stream.puts
+          end
         end
       end
 
