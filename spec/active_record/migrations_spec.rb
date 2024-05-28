@@ -6,7 +6,7 @@ RSpec.describe ActiveRecord::PostgresEnum::CommandRecorder do
   let(:connection) { ActiveRecord::Base.connection }
 
   it "reverts create_enum" do
-    migration = build_migration { create_enum :genre, %w[drama comedy] }
+    migration = build_migration { create_enum :genre, %w[drama comedy], if_not_exists: true }
 
     migration.migrate(:up)
 
