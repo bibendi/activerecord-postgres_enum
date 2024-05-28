@@ -5,8 +5,20 @@ require "spec_helper"
 RSpec.describe ActiveRecord::PostgresEnum::CommandRecorder do
   let(:connection) { ActiveRecord::Base.connection }
 
-  it "reverts create_enum" do
-    migration = build_migration { create_enum :genre, %w[drama comedy], if_not_exists: true }
+  it "reverts create_enum with no options" do
+    migration = build_migration { create_enum :genre, %w[drama comedy] }
+
+    migration.migrate(:up)
+
+    expect(connection.enum_types[:genre]).to eq %w[drama comedy]
+
+    migration.migrate(:down)
+
+    expect(connection.enum_types[:genre]).to be_nil
+  end
+
+  it "reverts create_enum with options" do
+    migration = build_migration { create_enum :genre, %w[drama comedy], force: true, if_not_exists: true }
 
     migration.migrate(:up)
 
