@@ -3,7 +3,7 @@
 module ActiveRecord
   module PostgresEnum
     module CommandRecorder
-      def create_enum(name, values)
+      def create_enum(name, values, _opts = nil)
         record(:create_enum, [name, values])
       end
 
