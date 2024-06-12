@@ -197,5 +197,48 @@ RSpec.describe ActiveRecord::PostgresEnum do
       expect(col.type).to eq :enum
       expect(col.sql_type).to eq "foo"
     end
+
+    context "only affects the selected schema" do
+      before do
+        @default_schema = connection.schema_search_path
+
+        connection.execute "CREATE SCHEMA IF NOT EXISTS myschema"
+        connection.schema_search_path = "myschema"
+
+        expect { connection.create_enum(:foo, %w[a1 a2]) }.to_not raise_error
+      end
+
+      after do
+        connection.execute "DROP SCHEMA myschema CASCADE"
+        connection.schema_search_path = @default_schema
+
+        expect(connection.enum_types[:foo]).to eq %w[a1 a2]
+      end
+
+      it "drops only the separate enum" do
+        expect { connection.drop_enum(:foo) }.to_not raise_error
+        expect(connection.enum_types[:foo]).to be_nil
+      end
+
+      it "renames only the separate enum" do
+        expect { connection.rename_enum(:foo, :bar) }.to_not raise_error
+        expect(connection.enum_types[:bar]).to eq %w[a1 a2]
+      end
+
+      it "adds an enum value to the separate enum only" do
+        expect { connection.add_enum_value(:foo, "a3") }.to_not raise_error
+        expect(connection.enum_types[:foo]).to eq %w[a1 a2 a3]
+      end
+
+      it "removes an enum value from the separate enum only" do
+        expect { connection.remove_enum_value(:foo, "a2") }.to_not raise_error
+        expect(connection.enum_types[:foo]).to eq %w[a1]
+      end
+
+      it "renames an enum value in the separate enum only" do
+        expect { connection.rename_enum_value(:foo, "a2", "b2") }.to_not raise_error
+        expect(connection.enum_types[:foo]).to eq %w[a1 b2]
+      end
+    end
   end
 end

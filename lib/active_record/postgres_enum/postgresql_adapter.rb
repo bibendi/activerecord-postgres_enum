@@ -10,8 +10,10 @@ module ActiveRecord
           t.typtype,
           array_to_string(array_agg(e.enumlabel ORDER BY e.enumsortorder), '\t\t', '') as enumlabels
         FROM pg_type t
+        INNER JOIN pg_namespace n ON n.oid = t.typnamespace
         LEFT JOIN pg_enum e ON e.enumtypid = t.oid
-        WHERE typtype = 'e'
+        WHERE t.typtype = 'e'
+        AND n.nspname = ANY(current_schemas(true))
         GROUP BY t.OID, t.typname, t.typtype
         ORDER BY t.typname
       SQL
@@ -58,8 +60,12 @@ module ActiveRecord
       def remove_enum_value(name, value)
         sql = %{
           DELETE FROM pg_enum
-          WHERE enumlabel=#{quote value}
-          AND enumtypid=(SELECT oid FROM pg_type WHERE typname='#{name}')
+          WHERE enumlabel = #{quote value}
+          AND enumtypid IN (SELECT t.oid
+                            FROM pg_type t
+                            INNER JOIN pg_namespace n ON n.oid = t.typnamespace
+                            WHERE t.typname = '#{name}'
+                            AND n.nspname = ANY(current_schemas(true)))
         }
         execute sql
       end
